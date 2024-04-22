@@ -33,10 +33,11 @@ class Test_Movement(ut.TestCase):
 
     def test_getters(self):
         t_mover = c.Movement(v.Vector2(1,4), v.Vector2(0,-1))
-        directions = ["up","down","right","left"]
+        directions = ["down","right","left"]
         directionV = t_mover.GetDirection()
         locationV = t_mover.GetLocation()
-        directionsV = t_mover.GetPossibleDirections()
+        print(locationV)
+        directionsV = t_mover.GetPossibleDirections(v.Vector2(10,10))
         print(directionsV)
         self.assertEqual(directionV, v.Vector2(0,-1))
         self.assertEqual(locationV, v.Vector2(1,4))
@@ -51,10 +52,10 @@ class Test_Movement(ut.TestCase):
 
     def test_move(self):
         t_mover = c.Movement(v.Vector2(0,0), v.Vector2(-1,0))
-        t_mover.Move()
+        t_mover.Move(v.Vector2(10,10))
         self.assertEqual(t_mover.location, v.Vector2(-1,0))
         t_mover.SetDirection('right')
-        t_mover.Move()
+        t_mover.Move(v.Vector2(10,10))
         self.assertEqual(t_mover.GetLocation,v.Vector2(-1,-1))
 
 class Test_Stat(ut.TestCase):

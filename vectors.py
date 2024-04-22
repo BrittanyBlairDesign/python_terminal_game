@@ -23,9 +23,10 @@ class Vector2:
     #   Setting one vector equal to another   #
     def __eq__(self, vector2: Vector2):
         if isinstance(vector2,Vector2):
-            self.x = vector2.x
-            self.y = vector2.y
-        return self
+            if self.x == vector2.x and self.y == vector2.y:
+                return True
+            else:
+                return False
 
     #   Setting one vector to += another    #
     def __iadd__(self, vector2: Vector2):
