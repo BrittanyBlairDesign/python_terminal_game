@@ -7,10 +7,14 @@ import components as c
 import vectors as v
 import random as r
 
-class MovingCharacter:
-    def __init__(self, map_size: v.Vector2, map_symbol: str):
+
+class Enemy():
+    def __init__(self, map_size: v.Vector2, map_symbol: str, damage:int):
         self.map_size = map_size
         self.map_symbol = map_symbol
+        self.damage = c.Stat(damage)
+        self.movement = c.Movement(v.Vector2(0,0))
+
     def __repr__(self):
         return self.map_symbol
 
@@ -20,28 +24,32 @@ class MovingCharacter:
             return newLocation
     def MoveOptions(self):
         return self.movement.GetPossibleDirections(self.map_size)
-
-    ## Variable for moving characters ##
-    movement: c.Movement = c.Movement(v.Vector2(0,0))
-    map_symbol: str = 'x'
-    map_size: v.Vector2 = v.Vector2()
-
-class Enemy(MovingCharacter):
-    def __init__(self, map_size: v.Vector2, map_symbol: str, damage:int):
-        MovingCharacter.__init__(self, map_size, map_symbol)
-        self.damage = c.Stat(damage)
-
+    
     ## Variables for Enemies
-    damage:c.Stat = c.Stat(1)
+    map_size = v.Vector2(0,0)
+    
 
-class Player(MovingCharacter):
+class Player():
     def __init__(self, map_size: v.Vector2, map_symbol:str, health:int = 3):
-        MovingCharacter.__init__(self, map_size, map_symbol)
+        self.map_size = map_size
+        self.map_symbol = map_symbol
         self.health = c.Stat(health)
 
+    def __repr__(self):
+        return self.map_symbol
+
+    def Move(self, command:str):
+        if self.movement.SetDirection(command):
+            newLocation:v.Vector2 = self.movement.Move(self.map_size)
+            return newLocation
+    
+    def MoveOptions(self):
+        return self.movement.GetPossibleDirections(self.map_size)
+    
     def TakeDamage(self, damage:int):
         alive = self.health.Decrease(damage)
         print("Player got hit by an enemy and takes {d} damage.\nPlayer Health : {h}".format(d=str(damage),h=str(self.health)))
+        print(alive)
         return alive
 
     def Heal(self, amount:int):
@@ -50,7 +58,7 @@ class Player(MovingCharacter):
 
 
     def PrintInfo(self):
-        info = """"
+        info = """
         Player : {symbol}
         \tHealth - {health}
         \tPossible Movements - {moves}
@@ -60,7 +68,10 @@ class Player(MovingCharacter):
 
 
     ## Variable for Player ##
+    map_size = v.Vector2(0,0)
+    map_symbol = 'x'
     health:c.Stat = c.Stat(3)
+    movement = c.Movement(v.Vector2(0,0))
 
 class Item:
     def __init__(self, Value, map_symbol):

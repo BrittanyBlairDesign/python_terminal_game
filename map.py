@@ -74,7 +74,6 @@ class Map:
             if command in player.movement.directions.keys():
                 new_location = player.movement.test_location(self.map_size, v.Vector2(player.movement.directions[command][0], player.movement.directions[command][1]), False)
                 locationType = self.GetLocationType(self.GetLocationSymbol(new_location))
-                print(locationType)
                 if locationType == "enemy":
                     ## TAKE DAMAGE DO NOT MOVE. ##
                     if isinstance(self.map[new_location.x][new_location.y], char.Enemy):
@@ -92,7 +91,6 @@ class Map:
                         self.map[old_location.x][old_location.y] = r.choice(self.map_symbols["floor"])
                 elif locationType == "goal":
                     ## MOVE AND WIN GAME
-                    print("its a goal")
                     if command in player.MoveOptions():
                         player.Move(command)
                         self.map[new_location.x][new_location.y] = player
@@ -108,7 +106,7 @@ class Map:
 
         old_location = enemy.movement.GetLocation()
         RandOption = r.choice(enemy.MoveOptions())
-    
+
         option = v.Vector2(enemy.movement.directions[RandOption][0], enemy.movement.directions[RandOption][1])
         new_location = enemy.movement.test_location(self.map_size, option, False)
         locationType = self.GetLocationType(self.GetLocationSymbol(new_location))
@@ -121,9 +119,8 @@ class Map:
         elif locationType == "floor":
             enemy.Move(RandOption)
             self.map[new_location.x][new_location.y] = enemy
-            self.map[old_location.x][old_location.y] = r.choice(self.map_symbols["floor"])
-        
-
+            self.map[old_location.x][old_location.y] = self.map_symbols["floor"][r.choice([0,1])]
+            
     def placeItems(self, items:list):
         for i in items:
             placed = False
@@ -138,7 +135,7 @@ class Map:
                         self.map[width][height] = player
                         placed = True
                     elif isinstance(i, char.Enemy):
-                        enemy: char.Player = i
+                        enemy: char.Enemy = i
                         enemy.movement.SetLocation(v.Vector2(width,height))
                         self.map[width][height] = enemy
                         placed = True

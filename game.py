@@ -42,16 +42,17 @@ def Start( playerSymbol = ' '):
     game_map.placeItems(items)
 
     # generate at least 1 enemy
-    enemies = []
+    enemies = {}
     for i in range(0,r.randint(1,5)):
         damage = r.randint(1,3)
         enemy = char.Enemy(game_map.map_size, game_map.map_symbols["enemy"][0], damage)
-        enemies.append(enemy)
-    game_map.placeItems(enemies)
+        enemies[i] = enemy
+        game_map.placeItems([enemy])
+    
    
     # if its a new game then we choose the player symbol, if its a continuing game we use the same symbol.
     if(playerSymbol == ' '):
-        response = input("Please choose a keyboard symbol to represent yourself on the map.")
+        response = input("Please choose a keyboard symbol to represent yourself on the map.\n\t")
 
         while not validateResponse(response[0], ['#', '&', '.', ',', '|', '~', '-', '_'], False):
             response = input("Sorry that symbol is already bein used on the map to represent something. Please choose a different symbol.")
@@ -60,7 +61,7 @@ def Start( playerSymbol = ' '):
     game_map.map_symbols["player"][0] = playerSymbol
 
     # make the player
-    player = char.Player(game_map.map_size, playerSymbol, len(enemies) + 1)
+    player = char.Player(game_map.map_size, playerSymbol, len(enemies.values()) + 1)
     game_map.placeItems([player, '#'])
 
     return PlayGame(player,enemies,game_map)
@@ -122,22 +123,27 @@ def PlayGame(Player:char.Player, Enemies, Game_Map:m.Map):
 
         if command in ['up','down','left','right']:
             result = Game_Map.UpdatePlayerLocation(Player, command)
+            
             if validateResponse(result, ['win','lose'], False):
                 Game_Status = "playing"
             else:
                 Game_Status = result
-            
-            for e in range(0,len(Enemies)):
+                break
+                 
+            for e in range(0,len(Enemies.values())):
                 result = Game_Map.UpdateEnemyLocation(Enemies[e])
                 if validateResponse(result, ['win','lose'], False):
                     Game_Status = "playing"
                 else:
                     Game_Status = result
+                    break
         elif command =='rules':
             if Rules(playerSymbol=Player.map_symbol, inGame=True) == 'Exit':
                 Game_Status = 'Exit'
+                break
         else:
             Game_Status = "Exit"
+            break
     
     if Game_Status == "win":
         print("Player Wins!!\nYou managed to escape the dungeon!")

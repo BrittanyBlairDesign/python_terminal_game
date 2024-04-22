@@ -63,8 +63,6 @@ class Movement:
                 return v.Vector2(self.location.x + self.direction.x, self.location.y + self.direction.y)
         return v.Vector2(0,0)
     ## Movement variables ##
-    location: v.Vector2 = v.Vector2(0,0)
-    direction: v.Vector2 = v.Vector2(0,0)
     directions = {"up": [-1, 0], "down": [1, 0],"right":[0, 1],"left": [0, -1]}
     
 #### HANDLES THE  IFORMATION REGARDING A SPECIFIC STAT OF AN OBJECT ####
